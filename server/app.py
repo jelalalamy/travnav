@@ -17,3 +17,11 @@ def brute_force():
     distances = data['distances']
     path = brute_force_solve(cities, distances)
     return {'data': {'path': path}}
+
+@app.post('/nearest')
+def nearest_neighbour():
+    data = request.get_json()
+    cities = data['cities']
+    distances = data['distances']
+    path = nearest_neighbor_solve(cities, distances)
+    return {'data': {'path': path}}

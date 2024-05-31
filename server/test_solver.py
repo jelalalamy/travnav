@@ -18,9 +18,9 @@ def main():
                 [250,298,153,187,294,372,422,257,330,392,150,0]     # Frankfurt
                 ]
     
-    print(nearest_neighbor(cities, distances))
-    print(brute_force(citiesSmall, distances))
-    print(nearest_neighbor(citiesSmall, distances))
+    print(nearest_neighbor_solve(cities, distances))
+    print(brute_force_solve(citiesSmall, distances))
+    print(nearest_neighbor_solve(citiesSmall, distances))
 
 
 if __name__ == "__main__":

@@ -1,5 +1,4 @@
 from typing import List
-import math
 from itertools import permutations
 
 def get_distance(cities, distances, city1, city2):
@@ -7,7 +6,7 @@ def get_distance(cities, distances, city1, city2):
     return distances[cities.index(city1)][cities.index(city2)]
 
 
-def brute_force(cities, distances):
+def brute_force_solve(cities: List[str], distances: List[List[int]]) -> List[str]:
     """Brute force solution comparing all permutations of cities. Not recommended for more than 7-8 cities."""
     perms = permutations(cities)
     bestPerm = None
@@ -22,7 +21,7 @@ def brute_force(cities, distances):
     return bestPerm
 
 
-def nearest_neighbor(cities: List[str], distances: List[List[int]]) -> List[str]:
+def nearest_neighbor_solve(cities: List[str], distances: List[List[int]]) -> List[str]:
     """Suboptimal greedy solution."""
     unvisited = set(cities)
     current = cities[0]

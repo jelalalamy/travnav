@@ -1,8 +1,19 @@
 import { useState } from "react";
-import { APIProvider, Map } from '@vis.gl/react-google-maps';
+import { APIProvider, ControlPosition, Map } from '@vis.gl/react-google-maps';
+import {CustomMapControl} from './map-control';
+
+export type AutocompleteMode = {id: string; label: string};
+
+const autocompleteModes: Array<AutocompleteMode> = [
+  {id: 'classic', label: 'Google Autocomplete Widget'},
+  {id: 'custom', label: 'Custom Build'},
+  {id: 'custom-hybrid', label: 'Custom w/ Select Widget'}
+];
 
 const App = () => {
   const [data, setData] = useState([]);
+  const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
+  const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
 
   const onClickHandler = async () => {
     const cities = ["Toronto", "Scarborough", "Markham", "North York"];
@@ -27,8 +38,8 @@ const App = () => {
 
   return (
     <div className="h-screen">
-      <button onClick={onClickHandler}>Click me</button>
-      <h3>{data}</h3>
+      {/* <button onClick={onClickHandler}>Click me</button>
+      <h3>{data}</h3> */}
       <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
         <Map
           defaultZoom={3}
@@ -36,6 +47,11 @@ const App = () => {
           gestureHandling={'greedy'}
           disableDefaultUI={true}
         />
+      <CustomMapControl
+        controlPosition={ControlPosition.TOP}
+        selectedAutocompleteMode={selectedAutocompleteMode}
+        onPlaceSelect={setSelectedPlace}
+      />
       </APIProvider>
     </div>
   );

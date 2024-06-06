@@ -36,21 +36,29 @@ const App = () => {
     setData(resData.data.path);
   };
 
+  const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
+    setSelectedPlace(place)
+    console.log(place?.geometry?.location?.lat())
+    console.log(place?.geometry?.location?.lng())
+  }
+
   return (
     <div className="h-screen">
+      <h3>asdf</h3>
+      <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3>
       {/* <button onClick={onClickHandler}>Click me</button>
       <h3>{data}</h3> */}
       <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
-        <Map
+        {/* <Map
           defaultZoom={3}
           defaultCenter={{ lat: 22.54992, lng: 0 }}
           gestureHandling={'greedy'}
           disableDefaultUI={true}
-        />
+        /> */}
       <CustomMapControl
         controlPosition={ControlPosition.TOP}
         selectedAutocompleteMode={selectedAutocompleteMode}
-        onPlaceSelect={setSelectedPlace}
+        onPlaceSelect={onPlaceSelect}
       />
       </APIProvider>
     </div>

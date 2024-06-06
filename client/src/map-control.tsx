@@ -1,9 +1,9 @@
 import React from 'react';
-import {ControlPosition, MapControl} from '@vis.gl/react-google-maps';
+import { ControlPosition, MapControl } from '@vis.gl/react-google-maps';
 
-import {PlaceAutocompleteClassic} from './autocomplete-classic';
+import { PlaceAutocompleteClassic } from './autocomplete-classic';
 
-import type {AutocompleteMode} from './App';
+import type { AutocompleteMode } from './App';
 
 type CustomAutocompleteControlProps = {
   controlPosition: ControlPosition;
@@ -16,15 +16,20 @@ export const CustomMapControl = ({
   selectedAutocompleteMode,
   onPlaceSelect
 }: CustomAutocompleteControlProps) => {
-  const {id} = selectedAutocompleteMode;
+  const { id } = selectedAutocompleteMode;
 
   return (
-    <MapControl position={controlPosition}>
-      <div className="autocomplete-control text-black">
-        {id === 'classic' && (
-          <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
-        )}
-      </div>
-    </MapControl>
+    // <MapControl position={controlPosition}>
+    //   <div className="autocomplete-control text-black">
+    //     {id === 'classic' && (
+    //       <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
+    //     )}
+    //   </div>
+    // </MapControl>
+    <div className="autocomplete-control text-black">
+      {id === 'classic' && (
+        <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
+      )}
+    </div>
   );
 };

@@ -3,6 +3,7 @@ import { APIProvider, ControlPosition, Map } from '@vis.gl/react-google-maps';
 import {CustomMapControl} from './map-control';
 
 export type AutocompleteMode = {id: string; label: string};
+type SelectedPlace = {name: string, latlng: [number | undefined, number | undefined]}
 
 const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'classic', label: 'Google Autocomplete Widget'},
@@ -12,8 +13,13 @@ const autocompleteModes: Array<AutocompleteMode> = [
 
 const App = () => {
   const [data, setData] = useState([]);
-  const [selectedPlaces, setSelectedPlaces] = useState<Array<[number | undefined, number | undefined]>>([[43.81793459999999, -79.30532389999999], [43.8145114, -79.29339039999999], [43.7830961, -79.1873263]])
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
+  const temp : Array<SelectedPlace> = [{name: 'home', latlng: [43.82120817331005, -79.31640603338617]}, 
+                                       {name: 'oishiii', latlng: [43.81793459999999, -79.30532389999999]}, 
+                                       {name: 'v1', latlng: [43.8145114, -79.29339039999999]}, 
+                                       {name: 'utsc', latlng: [43.7830961, -79.1873263]}
+                                      ]
+  const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>(temp)
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
 
   const onClickHandler = async () => {
@@ -41,13 +47,13 @@ const App = () => {
     setSelectedPlace(place)
     const lat = place?.geometry?.location?.lat()
     const lng = place?.geometry?.location?.lng()
-    setSelectedPlaces([...selectedPlaces, [lat, lng]])
+    setSelectedPlaces([...selectedPlaces, {name: 'asdf', latlng: [lat, lng]}])
   }
 
   return (
     <div className="h-screen">
       <h3>asdf</h3>
-      <h3>selected places: {selectedPlaces.map(pair => ' [' + pair.toString() + ']').toString()}</h3>
+      <h3>selected places: {selectedPlaces.map(place => JSON.stringify(place)).toString()}</h3>
       <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3>
       {/* <button onClick={onClickHandler}>Click me</button>
       <h3>{data}</h3> */}

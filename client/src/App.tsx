@@ -12,6 +12,7 @@ const autocompleteModes: Array<AutocompleteMode> = [
 
 const App = () => {
   const [data, setData] = useState([]);
+  const [selectedPlaces, setSelectedPlaces] = useState<Array<[number | undefined, number | undefined]>>([[43.81793459999999, -79.30532389999999], [43.8145114, -79.29339039999999], [43.7830961, -79.1873263]])
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
 
@@ -38,29 +39,31 @@ const App = () => {
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     setSelectedPlace(place)
-    console.log(place?.geometry?.location?.lat())
-    console.log(place?.geometry?.location?.lng())
+    const lat = place?.geometry?.location?.lat()
+    const lng = place?.geometry?.location?.lng()
+    setSelectedPlaces([...selectedPlaces, [lat, lng]])
   }
 
   return (
     <div className="h-screen">
       <h3>asdf</h3>
+      <h3>selected places: {selectedPlaces.map(pair => ' [' + pair.toString() + ']').toString()}</h3>
       <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3>
       {/* <button onClick={onClickHandler}>Click me</button>
       <h3>{data}</h3> */}
-      <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
-        {/* <Map
+      {/* <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
+        <Map
           defaultZoom={3}
           defaultCenter={{ lat: 22.54992, lng: 0 }}
           gestureHandling={'greedy'}
           disableDefaultUI={true}
-        /> */}
+        />
       <CustomMapControl
         controlPosition={ControlPosition.TOP}
         selectedAutocompleteMode={selectedAutocompleteMode}
         onPlaceSelect={onPlaceSelect}
       />
-      </APIProvider>
+      </APIProvider> */}
     </div>
   );
 }

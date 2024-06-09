@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from solver import brute_force_solve, nearest_neighbor_solve
+from goog import computeRouteMatrix
 
 app = Flask(__name__)
 CORS(app)
@@ -20,13 +21,14 @@ def handler():
     if method == 'hello':
         return hello()
     
-    cities = data['cities']
-    distances = data['distances']
+    places = data['places']
+    routeMatrix = computeRouteMatrix(places)
     path = ['not found']
+    
     if method == 'brute':
-        path = brute_force_solve(cities, distances)
+        path = brute_force_solve(places, routeMatrix)
     if method == 'nearest':
-        path = nearest_neighbor_solve(cities, distances)
+        path = nearest_neighbor_solve(places, routeMatrix)
 
     return {'data': {'path': path}}
 

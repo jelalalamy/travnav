@@ -3,7 +3,7 @@ import { APIProvider, ControlPosition, Map } from '@vis.gl/react-google-maps';
 import {CustomMapControl} from './map-control';
 
 export type AutocompleteMode = {id: string; label: string};
-type SelectedPlace = {name: string, latlng: [number | undefined, number | undefined]}
+type SelectedPlace = {name: string, placeId: string | undefined}
 
 const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'classic', label: 'Google Autocomplete Widget'},
@@ -14,21 +14,17 @@ const autocompleteModes: Array<AutocompleteMode> = [
 const App = () => {
   const [data, setData] = useState([]);
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
-  const temp : Array<SelectedPlace> = [{name: 'home', latlng: [43.82120817331005, -79.31640603338617]}, 
-                                       {name: 'oishiii', latlng: [43.81793459999999, -79.30532389999999]}, 
-                                       {name: 'v1', latlng: [43.8145114, -79.29339039999999]}, 
-                                       {name: 'utsc', latlng: [43.7830961, -79.1873263]}
+  const temp : Array<SelectedPlace> = [{name: 'home', placeId: 'ChIJOdPET4rT1IkR9pq2mnY1hTU'}, 
+                                       {name: 'oishiii', placeId: 'ChIJ55UUDwzT1IkRv4F9ZBII87I'}, 
+                                       {name: 'v1', placeId: 'ChIJYVMHqB_T1IkRUXng8NIT57U'}, 
+                                       {name: 'utsc', placeId: 'ChIJf9Wrt2_a1IkRrHuIaQFuZbs'}
                                       ];
   const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>(temp);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>('hello');
 
   const onClickHandler = async () => {
-    const cities = ["Toronto", "Scarborough", "Markham", "North York"];
-    const distances = [[0, 10, 15, 20],
-    [10, 0, 35, 25],
-    [15, 35, 0, 30],
-    [20, 25, 30, 0]];
+    const places = ["Toronto", "Scarborough", "Markham", "North York"];
 
     const res = await fetch('http://localhost:5000/bestpath', {
       method: 'POST',
@@ -36,7 +32,7 @@ const App = () => {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ cities: cities, distances: distances, method: selectedMethod })
+      body: JSON.stringify({ places: places, method: selectedMethod })
     });
     const resData = await res.json();
     console.log(resData);
@@ -46,9 +42,8 @@ const App = () => {
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     setSelectedPlace(place);
-    const lat = place?.geometry?.location?.lat();
-    const lng = place?.geometry?.location?.lng();
-    setSelectedPlaces([...selectedPlaces, {name: 'asdf', latlng: [lat, lng]}])
+    const placeId = place?.place_id;
+    setSelectedPlaces([...selectedPlaces, {name: 'asdf', placeId: placeId}])
   }
 
   const onMethodSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {

@@ -8,13 +8,14 @@ CORS(app)
 # .venv\Scripts\activate
 # flask --debug run
 
-@app.route('/')
-def hello_world():
-    return '<p>Hello, World</p>'
-
 @app.get('/hello')
 def hello():
     return {'data': 'hello'}
+
+@app.post('/bestpath')
+def handler():
+    data = request.get_json()
+    return
 
 @app.post('/brute')
 def brute_force():

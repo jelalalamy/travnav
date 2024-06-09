@@ -18,9 +18,10 @@ const App = () => {
                                        {name: 'oishiii', latlng: [43.81793459999999, -79.30532389999999]}, 
                                        {name: 'v1', latlng: [43.8145114, -79.29339039999999]}, 
                                        {name: 'utsc', latlng: [43.7830961, -79.1873263]}
-                                      ]
-  const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>(temp)
+                                      ];
+  const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>(temp);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
+  const [selectedMethod, setSelectedMethod] = useState<string>('hello');
 
   const onClickHandler = async () => {
     const cities = ["Toronto", "Scarborough", "Markham", "North York"];
@@ -29,34 +30,42 @@ const App = () => {
     [15, 35, 0, 30],
     [20, 25, 30, 0]];
 
-    const res = await fetch('http://localhost:5000/brute', {
+    const res = await fetch('http://localhost:5000/bestpath', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ cities: cities, distances: distances })
+      body: JSON.stringify({ cities: cities, distances: distances, method: selectedMethod })
     });
     const resData = await res.json();
-    console.log(resData)
-    console.log(resData.data.path)
+    console.log(resData);
+    console.log(resData.data.path);
     setData(resData.data.path);
   };
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
-    setSelectedPlace(place)
-    const lat = place?.geometry?.location?.lat()
-    const lng = place?.geometry?.location?.lng()
+    setSelectedPlace(place);
+    const lat = place?.geometry?.location?.lat();
+    const lng = place?.geometry?.location?.lng();
     setSelectedPlaces([...selectedPlaces, {name: 'asdf', latlng: [lat, lng]}])
+  }
+
+  const onMethodSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedMethod(e.target.value)
   }
 
   return (
     <div className="h-screen">
-      <h3>asdf</h3>
-      <h3>selected places: {selectedPlaces.map(place => JSON.stringify(place)).toString()}</h3>
-      <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3>
-      {/* <button onClick={onClickHandler}>Click me</button>
-      <h3>{data}</h3> */}
+      {/* <h3>selected places: {selectedPlaces.map(place => JSON.stringify(place)).toString()}</h3>
+      <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3> */}
+      <select className="text-black" value={selectedMethod} onChange={onMethodSelect}>
+        <option value="hello">Hello</option>
+        <option value="brute">Brute</option>
+        <option value="nearest">Nearest</option>
+      </select>
+      <button onClick={onClickHandler}>Click me</button>
+      <h3>{data}</h3>
       {/* <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
         <Map
           defaultZoom={3}

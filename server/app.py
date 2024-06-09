@@ -10,25 +10,38 @@ CORS(app)
 
 @app.get('/hello')
 def hello():
-    return {'data': 'hello'}
+    return {'data': {'path': ['hello'], 'msg': 'hello'}}
 
 @app.post('/bestpath')
 def handler():
     data = request.get_json()
-    return
+    method = data['method']
 
-@app.post('/brute')
-def brute_force():
-    data = request.get_json()
+    if method == 'hello':
+        return hello()
+    
     cities = data['cities']
     distances = data['distances']
-    path = brute_force_solve(cities, distances)
+    path = ['not found']
+    if method == 'brute':
+        path = brute_force_solve(cities, distances)
+    if method == 'nearest':
+        path = nearest_neighbor_solve(cities, distances)
+
     return {'data': {'path': path}}
 
-@app.post('/nearest')
-def nearest_neighbour():
-    data = request.get_json()
-    cities = data['cities']
-    distances = data['distances']
-    path = nearest_neighbor_solve(cities, distances)
-    return {'data': {'path': path}}
+# @app.post('/brute')
+# def brute_force():
+#     data = request.get_json()
+#     cities = data['cities']
+#     distances = data['distances']
+#     path = brute_force_solve(cities, distances)
+#     return {'data': {'path': path}}
+
+# @app.post('/nearest')
+# def nearest_neighbour():
+#     data = request.get_json()
+#     cities = data['cities']
+#     distances = data['distances']
+#     path = nearest_neighbor_solve(cities, distances)
+#     return {'data': {'path': path}}

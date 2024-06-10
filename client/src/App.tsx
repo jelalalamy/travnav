@@ -4,7 +4,7 @@ import {CustomMapControl} from './map-control';
 import MapHandler from './map-handler'
 
 export type AutocompleteMode = {id: string; label: string};
-type SelectedPlace = {name: string | undefined, placeId: string | undefined}
+type SelectedPlace = {name: string | undefined, placeId: string | undefined, place: google.maps.places.PlaceResult | null}
 
 const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'classic', label: 'Google Autocomplete Widget'},
@@ -15,17 +15,18 @@ const autocompleteModes: Array<AutocompleteMode> = [
 const App = () => {
   const [data, setData] = useState([]);
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
-  const temp : Array<SelectedPlace> = [{name: 'home', placeId: 'ChIJOdPET4rT1IkR9pq2mnY1hTU'}, 
-                                       {name: 'oishiii', placeId: 'ChIJ55UUDwzT1IkRv4F9ZBII87I'}, 
-                                       {name: 'v1', placeId: 'ChIJYVMHqB_T1IkRUXng8NIT57U'}, 
-                                       {name: 'utsc', placeId: 'ChIJf9Wrt2_a1IkRrHuIaQFuZbs'}
-                                      ];
+  // const temp : Array<SelectedPlace> = [{name: 'home', placeId: 'ChIJOdPET4rT1IkR9pq2mnY1hTU'}, 
+  //                                      {name: 'oishiii', placeId: 'ChIJ55UUDwzT1IkRv4F9ZBII87I'}, 
+  //                                      {name: 'v1', placeId: 'ChIJYVMHqB_T1IkRUXng8NIT57U'}, 
+  //                                      {name: 'utsc', placeId: 'ChIJf9Wrt2_a1IkRrHuIaQFuZbs'}
+  //                                     ];
   const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>([]);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>('hello');
 
   const onClickHandler = async () => {
     const places = selectedPlaces.map(place => place.name);
+    const placeIds = selectedPlaces.map(place => place.placeId)
 
     const res = await fetch('http://localhost:5000/bestpath', {
       method: 'POST',
@@ -33,7 +34,7 @@ const App = () => {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ places: places, method: selectedMethod })
+      body: JSON.stringify({ places: places, placeIds: placeIds, method: selectedMethod })
     });
     const resData = await res.json();
     console.log(resData);
@@ -46,7 +47,7 @@ const App = () => {
     console.log(place)
     const name = place?.name;
     const placeId = place?.place_id;
-    setSelectedPlaces([...selectedPlaces, {name: name, placeId: placeId}])
+    setSelectedPlaces([...selectedPlaces, {name: name, placeId: placeId, place: place}])
   }
 
   const onMethodSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,12 +72,12 @@ const App = () => {
           gestureHandling={'greedy'}
           disableDefaultUI={true}
         />
-      <CustomMapControl
-        controlPosition={ControlPosition.TOP}
-        selectedAutocompleteMode={selectedAutocompleteMode}
-        onPlaceSelect={onPlaceSelect}
-      />
-      <MapHandler place={selectedPlace} />
+        <CustomMapControl
+          controlPosition={ControlPosition.TOP}
+          selectedAutocompleteMode={selectedAutocompleteMode}
+          onPlaceSelect={onPlaceSelect}
+        />
+        <MapHandler place={selectedPlace} />
       </APIProvider>
     </div>
   );

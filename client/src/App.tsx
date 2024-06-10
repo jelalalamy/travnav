@@ -3,7 +3,7 @@ import { APIProvider, ControlPosition, Map } from '@vis.gl/react-google-maps';
 import {CustomMapControl} from './map-control';
 
 export type AutocompleteMode = {id: string; label: string};
-type SelectedPlace = {name: string, placeId: string | undefined}
+type SelectedPlace = {name: string | undefined, placeId: string | undefined}
 
 const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'classic', label: 'Google Autocomplete Widget'},
@@ -24,7 +24,7 @@ const App = () => {
   const [selectedMethod, setSelectedMethod] = useState<string>('hello');
 
   const onClickHandler = async () => {
-    const places = ["home", "oishiii", "v1", "utsc"];
+    const places = selectedPlaces.map(place => place.name);
 
     const res = await fetch('http://localhost:5000/bestpath', {
       method: 'POST',
@@ -42,8 +42,9 @@ const App = () => {
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     setSelectedPlace(place);
+    const name = place?.name;
     const placeId = place?.place_id;
-    setSelectedPlaces([...selectedPlaces, {name: 'asdf', placeId: placeId}])
+    setSelectedPlaces([...selectedPlaces, {name: name, placeId: placeId}])
   }
 
   const onMethodSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -56,8 +57,8 @@ const App = () => {
       <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3> */}
       <select className="text-black" value={selectedMethod} onChange={onMethodSelect}>
         <option value="hello">Hello</option>
-        <option value="brute">Brute</option>
-        <option value="nearest">Nearest</option>
+        <option value="brute">Brute Force</option>
+        <option value="nearest">Nearest Neighbour</option>
       </select>
       <button onClick={onClickHandler}>Click me</button>
       <h3>{data}</h3>

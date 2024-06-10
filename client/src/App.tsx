@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { APIProvider, ControlPosition, Map } from '@vis.gl/react-google-maps';
 import {CustomMapControl} from './map-control';
+import MapHandler from './map-handler'
 
 export type AutocompleteMode = {id: string; label: string};
 type SelectedPlace = {name: string | undefined, placeId: string | undefined}
@@ -19,7 +20,7 @@ const App = () => {
                                        {name: 'v1', placeId: 'ChIJYVMHqB_T1IkRUXng8NIT57U'}, 
                                        {name: 'utsc', placeId: 'ChIJf9Wrt2_a1IkRrHuIaQFuZbs'}
                                       ];
-  const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>(temp);
+  const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>([]);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>('hello');
 
@@ -42,6 +43,7 @@ const App = () => {
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     setSelectedPlace(place);
+    console.log(place)
     const name = place?.name;
     const placeId = place?.place_id;
     setSelectedPlaces([...selectedPlaces, {name: name, placeId: placeId}])
@@ -53,16 +55,16 @@ const App = () => {
 
   return (
     <div className="h-screen">
-      {/* <h3>selected places: {selectedPlaces.map(place => JSON.stringify(place)).toString()}</h3>
-      <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3> */}
       <select className="text-black" value={selectedMethod} onChange={onMethodSelect}>
         <option value="hello">Hello</option>
         <option value="brute">Brute Force</option>
         <option value="nearest">Nearest Neighbour</option>
       </select>
-      <button onClick={onClickHandler}>Click me</button>
-      <h3>{data}</h3>
-      {/* <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
+      <button onClick={onClickHandler}>Compute Path</button>
+      <h3>Data: {data}</h3>
+      <h3>Selected places: {selectedPlaces.map(place => place.name)}</h3>
+      <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3>
+      <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
         <Map
           defaultZoom={3}
           defaultCenter={{ lat: 22.54992, lng: 0 }}
@@ -74,7 +76,8 @@ const App = () => {
         selectedAutocompleteMode={selectedAutocompleteMode}
         onPlaceSelect={onPlaceSelect}
       />
-      </APIProvider> */}
+      <MapHandler place={selectedPlace} />
+      </APIProvider>
     </div>
   );
 }

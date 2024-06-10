@@ -19,17 +19,17 @@ export const CustomMapControl = ({
   const { id } = selectedAutocompleteMode;
 
   return (
-    // <MapControl position={controlPosition}>
-    //   <div className="autocomplete-control text-black">
-    //     {id === 'classic' && (
-    //       <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
-    //     )}
-    //   </div>
-    // </MapControl>
-    <div className="autocomplete-control text-black">
-      {id === 'classic' && (
-        <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
-      )}
-    </div>
+    <MapControl position={controlPosition}>
+      <div className="autocomplete-control text-black">
+        {id === 'classic' && (
+          <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
+        )}
+      </div>
+    </MapControl>
+    // <div className="autocomplete-control text-black">
+    //   {id === 'classic' && (
+    //     <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
+    //   )}
+    // </div>
   );
 };

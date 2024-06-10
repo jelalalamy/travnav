@@ -24,7 +24,7 @@ const App = () => {
   const [selectedMethod, setSelectedMethod] = useState<string>('hello');
 
   const onClickHandler = async () => {
-    const places = ["Toronto", "Scarborough", "Markham", "North York"];
+    const places = ["home", "oishiii", "v1", "utsc"];
 
     const res = await fetch('http://localhost:5000/bestpath', {
       method: 'POST',
@@ -37,7 +37,7 @@ const App = () => {
     const resData = await res.json();
     console.log(resData);
     console.log(resData.data.path);
-    setData(resData.data.path);
+    setData(resData.data.path + resData.data.distances);
   };
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {

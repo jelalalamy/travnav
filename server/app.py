@@ -24,13 +24,13 @@ def handler():
     places = data['places']
     routeMatrix = computeRouteMatrix(places)
     path = ['not found']
-    
-    if method == 'brute':
-        path = brute_force_solve(places, routeMatrix)
-    if method == 'nearest':
-        path = nearest_neighbor_solve(places, routeMatrix)
 
-    return {'data': {'path': path}}
+    if method == 'brute':
+        path, distances = brute_force_solve(places, routeMatrix)
+    if method == 'nearest':
+        path, distances = nearest_neighbor_solve(places, routeMatrix)
+
+    return {'data': {'path': path, 'distances': distances}}
 
 # @app.post('/brute')
 # def brute_force():

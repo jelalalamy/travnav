@@ -21,8 +21,11 @@ def rotate_list_by_index(index, l):
 
 def brute_force_solve(places: List[str], routeMatrix: List[List[int]]) -> List[str]:
     """Brute force solution comparing all permutations of places. Not recommended for more than 7-8 places."""
+    print(places, flush=True)
+    print(routeMatrix, flush=True)
     perms = permutations(places)
     bestPerm = None
+    bestPath = []
     bestDistances = []
     bestDistance = float('inf')
 
@@ -35,12 +38,15 @@ def brute_force_solve(places: List[str], routeMatrix: List[List[int]]) -> List[s
         distance = sum(distances)
         if distance < bestDistance:
             bestPerm = perm
+            bestPath = list(perm)
             bestDistance = distance
             bestDistances = distances
 
     bestPerm = list(bestPerm)
     i = rotate_list_by_element(places[0], bestPerm)
     rotate_list_by_index(i, bestDistances)
+    print(bestPerm, flush=True)
+    print(bestDistances, flush=True)
     return bestPerm, bestDistances
 
 

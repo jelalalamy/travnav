@@ -22,7 +22,8 @@ def handler():
         return hello()
     
     places = data['places']
-    routeMatrix = computeRouteMatrix(places)
+    addresses = data['addresses']
+    routeMatrix = computeRouteMatrix(addresses)
     path = ['not found']
 
     if method == 'brute':

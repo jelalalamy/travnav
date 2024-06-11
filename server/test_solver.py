@@ -16,17 +16,17 @@ europeDistances = [[0,57,133,122,347,362,495,452,543,578,404,250],    # Augsburg
             [404,449,289,337,380,473,477,245,270,355,0,150],    # Cologne 
             [250,298,153,187,294,372,422,257,330,392,150,0]]    # Frankfurt
 
-america = ["Toronto", "Scarborough", "Markham", "North York"]
-americaDistances = [[0, 10, 15, 20], 
-                    [10, 0, 35, 25], 
-                    [15, 35, 0, 30], 
-                    [20, 25, 30, 0]] 
+america = ['43 Inniscross Crescent', 'University of Toronto Scarborough', 'Oishiii Sweets Cafe', 'V1 hair salon']
+americaDistances = [[0, 15083, 1320, 2836], 
+                    [15088, 0, 13844, 13778], 
+                    [1320, 13760, 0, 1513], 
+                    [3350, 12360, 1603, 0]] 
 
 def main():
-    print('------ Europe ------')
-    print(nearest_neighbor_solve(europe, europeDistances))
-    print(brute_force_solve(europeSmall, europeDistances))
-    print(nearest_neighbor_solve(europeSmall, europeDistances))
+    # print('------ Europe ------')
+    # print(nearest_neighbor_solve(europe, europeDistances))
+    # print(brute_force_solve(europeSmall, europeDistances))
+    # print(nearest_neighbor_solve(europeSmall, europeDistances))
     print('----- America ------')
     print(brute_force_solve(america, americaDistances))
     print(nearest_neighbor_solve(america, americaDistances))

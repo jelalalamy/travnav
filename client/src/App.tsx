@@ -4,7 +4,7 @@ import {CustomMapControl} from './map-control';
 import MapHandler from './map-handler'
 
 export type AutocompleteMode = {id: string; label: string};
-type SelectedPlace = {name: string | undefined, placeId: string | undefined, place: google.maps.places.PlaceResult | null}
+type SelectedPlace = {name: string | undefined, address: string | undefined, place: google.maps.places.PlaceResult | null}
 
 const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'classic', label: 'Google Autocomplete Widget'},
@@ -26,7 +26,7 @@ const App = () => {
 
   const onClickHandler = async () => {
     const places = selectedPlaces.map(place => place.name);
-    const placeIds = selectedPlaces.map(place => place.placeId)
+    const addresses = selectedPlaces.map(place => place.address)
 
     const res = await fetch('http://localhost:5000/bestpath', {
       method: 'POST',
@@ -34,7 +34,7 @@ const App = () => {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ places: places, placeIds: placeIds, method: selectedMethod })
+      body: JSON.stringify({ places: places, addresses: addresses, method: selectedMethod })
     });
     const resData = await res.json();
     console.log(resData);
@@ -46,8 +46,8 @@ const App = () => {
     setSelectedPlace(place);
     console.log(place)
     const name = place?.name;
-    const placeId = place?.place_id;
-    setSelectedPlaces([...selectedPlaces, {name: name, placeId: placeId, place: place}])
+    const address = place?.formatted_address;
+    setSelectedPlaces([...selectedPlaces, {name: name, address: address, place: place}])
   }
 
   const onMethodSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {

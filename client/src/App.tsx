@@ -23,6 +23,7 @@ const App = () => {
   const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>([]);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>('hello');
+  const [bestPath, setBestPath] = useState<Array<SelectedPlace>>([]);
 
   const onClickHandler = async () => {
     const places = selectedPlaces.map(place => place.name);
@@ -38,8 +39,11 @@ const App = () => {
     });
     const resData = await res.json();
     console.log(resData);
-    console.log(resData.data.path);
-    setData(resData.data.path + resData.data.distances);
+    const path = resData.data.path;
+    console.log(path);
+    setData(path + resData.data.distances);
+    setBestPath(path.map((place: string) => selectedPlaces.find((selectedPlace: SelectedPlace) => place === selectedPlace.name)));
+    console.log(bestPath)
   };
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
@@ -71,7 +75,7 @@ const App = () => {
           defaultCenter={{ lat: 43.65, lng: -79.38 }}
           gestureHandling={'greedy'}
           disableDefaultUI={true}>
-          {/* <Directions/> */}
+          <Directions selectedPlaces={bestPath}/>
         </Map>
         <CustomMapControl
           controlPosition={ControlPosition.TOP}
@@ -84,7 +88,7 @@ const App = () => {
   );
 }
 
-const Directions = () => {
+const Directions = ({selectedPlaces}: {selectedPlaces: SelectedPlace[]}) => {
   const map = useMap();
   const routesLibrary = useMapsLibrary('routes');
   const [directionsService, setDirectionsService] =
@@ -103,40 +107,14 @@ const Directions = () => {
     setDirectionsRenderer(new routesLibrary.DirectionsRenderer({map}));
   }, [routesLibrary, map]);
 
-  // Use directions service
-  // useEffect(() => {
-  //   if (!directionsService || !directionsRenderer) return;
-
-  //   directionsService
-  //     .route({
-  //       origin: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
-  //       destination: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
-  //       waypoints: [{location: '3376 Kennedy Rd Unit 2, Scarborough, ON M1V 3S8, Canada'}, 
-  //                   {location: '105-3700 Midland Ave, Scarborough, ON M1V 0B4, Canada'},
-  //                   {location: '1265 Military Trail, Scarborough, ON M1C 1A4, Canada'}
-  //                 ],
-  //       travelMode: google.maps.TravelMode.DRIVING,
-  //       provideRouteAlternatives: true
-  //     })
-  //     .then(response => {
-  //       directionsRenderer.setDirections(response);
-  //       setRoutes(response.routes);
-  //     });
-
-  //   return () => directionsRenderer.setMap(null);
-  // }, [directionsService, directionsRenderer]);
-
   const getDirections = () => {
     if (!directionsService || !directionsRenderer) return;
 
     directionsService
       .route({
-        origin: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
-        destination: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
-        waypoints: [{location: '3376 Kennedy Rd Unit 2, Scarborough, ON M1V 3S8, Canada'}, 
-                    {location: '105-3700 Midland Ave, Scarborough, ON M1V 0B4, Canada'},
-                    {location: '1265 Military Trail, Scarborough, ON M1C 1A4, Canada'}
-                  ],
+        origin: selectedPlaces[0].address as string,
+        destination: selectedPlaces[0].address as string,
+        waypoints: selectedPlaces.slice(1).map(place => ({location: place.address})),
         travelMode: google.maps.TravelMode.DRIVING,
         provideRouteAlternatives: true
       })
@@ -162,12 +140,18 @@ const Directions = () => {
 
   return (
     <div className="directions">
-      <h2>{selected.summary}</h2>
-      <p>
-        {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
-      </p>
-      <p>Distance: {leg.distance?.text}</p>
-      <p>Duration: {leg.duration?.text}</p>
+      <h2>Directions</h2>
+      <ul>
+        {selected.legs.map(leg => 
+          <li className="mt-2" key={leg.start_address}>
+            <p>
+              {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
+            </p>
+            <p>Distance: {leg.distance?.text}</p>
+            <p>Duration: {leg.duration?.text}</p>
+          </li>
+        )}
+      </ul>
 
     </div>
   );

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { APIProvider, ControlPosition, Map } from '@vis.gl/react-google-maps';
+import { useState, useEffect } from "react";
+import { APIProvider, ControlPosition, Map, useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
 import {CustomMapControl} from './map-control';
 import MapHandler from './map-handler'
 
@@ -67,11 +67,12 @@ const App = () => {
       <h3>{selectedPlace ? selectedPlace.formatted_address : 'nothing selected yet'}</h3>
       <APIProvider apiKey={process.env.REACT_APP_GMK as string}>
         <Map
-          defaultZoom={3}
-          defaultCenter={{ lat: 22.54992, lng: 0 }}
+          defaultZoom={9}
+          defaultCenter={{ lat: 43.65, lng: -79.38 }}
           gestureHandling={'greedy'}
-          disableDefaultUI={true}
-        />
+          disableDefaultUI={true}>
+          {/* <Directions/> */}
+        </Map>
         <CustomMapControl
           controlPosition={ControlPosition.TOP}
           selectedAutocompleteMode={selectedAutocompleteMode}
@@ -79,6 +80,95 @@ const App = () => {
         />
         <MapHandler place={selectedPlace} />
       </APIProvider>
+    </div>
+  );
+}
+
+const Directions = () => {
+  const map = useMap();
+  const routesLibrary = useMapsLibrary('routes');
+  const [directionsService, setDirectionsService] =
+    useState<google.maps.DirectionsService>();
+  const [directionsRenderer, setDirectionsRenderer] =
+    useState<google.maps.DirectionsRenderer>();
+  const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
+  const [routeIndex, setRouteIndex] = useState(0);
+  const selected = routes[routeIndex];
+  const leg = selected?.legs[0];
+
+  // Initialize directions service and renderer
+  useEffect(() => {
+    if (!routesLibrary || !map) return;
+    setDirectionsService(new routesLibrary.DirectionsService());
+    setDirectionsRenderer(new routesLibrary.DirectionsRenderer({map}));
+  }, [routesLibrary, map]);
+
+  // Use directions service
+  // useEffect(() => {
+  //   if (!directionsService || !directionsRenderer) return;
+
+  //   directionsService
+  //     .route({
+  //       origin: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
+  //       destination: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
+  //       waypoints: [{location: '3376 Kennedy Rd Unit 2, Scarborough, ON M1V 3S8, Canada'}, 
+  //                   {location: '105-3700 Midland Ave, Scarborough, ON M1V 0B4, Canada'},
+  //                   {location: '1265 Military Trail, Scarborough, ON M1C 1A4, Canada'}
+  //                 ],
+  //       travelMode: google.maps.TravelMode.DRIVING,
+  //       provideRouteAlternatives: true
+  //     })
+  //     .then(response => {
+  //       directionsRenderer.setDirections(response);
+  //       setRoutes(response.routes);
+  //     });
+
+  //   return () => directionsRenderer.setMap(null);
+  // }, [directionsService, directionsRenderer]);
+
+  const getDirections = () => {
+    if (!directionsService || !directionsRenderer) return;
+
+    directionsService
+      .route({
+        origin: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
+        destination: '43 Inniscross Crescent, Scarborough, ON M1V 2S8, Canada',
+        waypoints: [{location: '3376 Kennedy Rd Unit 2, Scarborough, ON M1V 3S8, Canada'}, 
+                    {location: '105-3700 Midland Ave, Scarborough, ON M1V 0B4, Canada'},
+                    {location: '1265 Military Trail, Scarborough, ON M1C 1A4, Canada'}
+                  ],
+        travelMode: google.maps.TravelMode.DRIVING,
+        provideRouteAlternatives: true
+      })
+      .then(response => {
+        directionsRenderer.setDirections(response);
+        setRoutes(response.routes);
+      });
+  }
+
+  // Update direction route
+  useEffect(() => {
+    if (!directionsRenderer) return;
+    directionsRenderer.setRouteIndex(routeIndex);
+  }, [routeIndex, directionsRenderer]);
+
+  if (!leg) {
+    return (
+    <div className="directions">
+      <button onClick={getDirections}>Get best route</button>
+    </div>
+    );
+  }
+
+  return (
+    <div className="directions">
+      <h2>{selected.summary}</h2>
+      <p>
+        {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
+      </p>
+      <p>Distance: {leg.distance?.text}</p>
+      <p>Duration: {leg.duration?.text}</p>
+
     </div>
   );
 }

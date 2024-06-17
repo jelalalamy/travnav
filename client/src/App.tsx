@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { APIProvider, ControlPosition, Map, useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
+import { useState } from "react";
+import { APIProvider, ControlPosition, Map } from '@vis.gl/react-google-maps';
 import {CustomMapControl} from './map-control';
 import MapHandler from './map-handler'
 import Directions from "./Directions";
@@ -34,17 +34,13 @@ const App = () => {
       body: JSON.stringify({ places: places, addresses: addresses, method: selectedMethod })
     });
     const resData = await res.json();
-    console.log(resData);
     const path = resData.data.path;
-    console.log(path);
     setData(path + resData.data.distances);
     setBestPath(path.map((place: string) => selectedPlaces.find((selectedPlace: SelectedPlace) => place === selectedPlace.name)));
-    console.log(bestPath)
   };
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
     setSelectedPlace(place);
-    console.log(place)
     const name = place?.name;
     const address = place?.formatted_address;
     setSelectedPlaces([...selectedPlaces, {name: name, address: address, place: place}])

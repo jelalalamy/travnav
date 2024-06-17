@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { APIProvider, ControlPosition, Map, useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
+import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
 import { SelectedPlace } from "./App";
 
 const Directions = ({selectedPlaces}: {selectedPlaces: SelectedPlace[]}) => {

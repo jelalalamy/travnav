@@ -18,7 +18,7 @@ const App = () => {
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
   const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>([]);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
-  const [selectedMethod, setSelectedMethod] = useState<string>('hello');
+  const [selectedMethod, setSelectedMethod] = useState<string>('brute');
   const [bestPath, setBestPath] = useState<Array<SelectedPlace>>([]);
 
   const onClickHandler = async () => {
@@ -57,7 +57,6 @@ const App = () => {
   return (
     <div className="h-screen">
       <select className="text-black" value={selectedMethod} onChange={onMethodSelect}>
-        <option value="hello">Hello</option>
         <option value="brute">Brute Force</option>
         <option value="nearest">Nearest Neighbour</option>
       </select>

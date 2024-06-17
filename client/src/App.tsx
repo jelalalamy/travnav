@@ -5,6 +5,7 @@ import MapHandler from './map-handler'
 import Directions from "./Directions";
 
 export type AutocompleteMode = {id: string; label: string};
+export type SolveMethod = {id: string, label: string}
 export type SelectedPlace = {name: string | undefined, address: string | undefined, place: google.maps.places.PlaceResult | null}
 
 const autocompleteModes: Array<AutocompleteMode> = [
@@ -13,12 +14,17 @@ const autocompleteModes: Array<AutocompleteMode> = [
   {id: 'custom-hybrid', label: 'Custom w/ Select Widget'}
 ];
 
+const solveMethods: Array<SolveMethod> = [
+  {id: 'brute', label: 'Brute Force'},
+  {id: 'nearest', label: 'Nearest Neighbour'}
+];
+
 const App = () => {
   const [data, setData] = useState([]);
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
   const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>([]);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
-  const [selectedMethod, setSelectedMethod] = useState<string>('brute');
+  const [selectedMethod, setSelectedMethod] = useState<SolveMethod>(solveMethods[0]);
   const [bestPath, setBestPath] = useState<Array<SelectedPlace>>([]);
 
   const onClickHandler = async () => {
@@ -31,7 +37,7 @@ const App = () => {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ places: places, addresses: addresses, method: selectedMethod })
+      body: JSON.stringify({ places: places, addresses: addresses, method: selectedMethod.id })
     });
     const resData = await res.json();
     const path = resData.data.path;
@@ -47,14 +53,20 @@ const App = () => {
   }
 
   const onMethodSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedMethod(e.target.value)
+    const newMethod = solveMethods.find(method => method.id === e.target.value);
+    if (newMethod) {
+      setSelectedMethod(newMethod)
+    };
   }
 
   return (
     <div className="h-screen">
-      <select className="text-black" value={selectedMethod} onChange={onMethodSelect}>
-        <option value="brute">Brute Force</option>
-        <option value="nearest">Nearest Neighbour</option>
+      <select className="text-black" value={selectedMethod.id} onChange={onMethodSelect}>
+        {solveMethods.map(({id, label}) => (
+          <option key={id} value={id}>
+            {label}
+          </option>
+        ))}
       </select>
       <button onClick={onClickHandler}>Compute Path</button>
       <h3>Data: {data}</h3>
@@ -78,7 +90,5 @@ const App = () => {
     </div>
   );
 }
-
-
 
 export default App;

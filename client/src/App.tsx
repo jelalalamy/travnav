@@ -15,11 +15,6 @@ const autocompleteModes: Array<AutocompleteMode> = [
 const App = () => {
   const [data, setData] = useState([]);
   const [selectedAutocompleteMode, setSelectedAutocompleteMode] = useState<AutocompleteMode>(autocompleteModes[0]);
-  // const temp : Array<SelectedPlace> = [{name: 'home', placeId: 'ChIJOdPET4rT1IkR9pq2mnY1hTU'}, 
-  //                                      {name: 'oishiii', placeId: 'ChIJ55UUDwzT1IkRv4F9ZBII87I'}, 
-  //                                      {name: 'v1', placeId: 'ChIJYVMHqB_T1IkRUXng8NIT57U'}, 
-  //                                      {name: 'utsc', placeId: 'ChIJf9Wrt2_a1IkRrHuIaQFuZbs'}
-  //                                     ];
   const [selectedPlaces, setSelectedPlaces] = useState<Array<SelectedPlace>>([]);
   const [selectedPlace, setSelectedPlace] = useState<google.maps.places.PlaceResult | null>(null);
   const [selectedMethod, setSelectedMethod] = useState<string>('hello');

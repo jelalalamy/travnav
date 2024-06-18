@@ -50,7 +50,20 @@ p {
   padding-top: 0px;
   margin: 0.25rem;
   color: white;
-  background-color: #2d3748;
+  background-color: rgba(45, 55, 72, 0.9);
+  border-radius: 0.25rem;
+}
+
+.control {
+  position: absolute;
+  width: 275px;
+  top: 0px;
+  left: 0px;
+  padding: 1.25rem;
+  padding-top: 0px;
+  margin: 0.25rem;
+  color: white;
+  background-color: rgba(45, 55, 72, 0.9);
   border-radius: 0.25rem;
 }
 

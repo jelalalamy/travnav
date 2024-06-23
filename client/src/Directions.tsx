@@ -47,7 +47,7 @@ const Directions = ({selectedPlaces}: {selectedPlaces: SelectedPlace[]}) => {
   if (!leg) {
     return (
     <div className="directions">
-      <button onClick={getDirections}>Get best route</button>
+      <button onClick={getDirections}>Get Directions</button>
     </div>
     );
   }

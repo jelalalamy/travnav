@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
 import { SelectedPlace } from "./App";
 
-const Directions = ({selectedPlaces}: {selectedPlaces: SelectedPlace[]}) => {
+const Directions = ({ selectedPlaces }: { selectedPlaces: SelectedPlace[] }) => {
   const map = useMap();
   const routesLibrary = useMapsLibrary('routes');
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService>();
   const [directionsRenderer, setDirectionsRenderer] =
     useState<google.maps.DirectionsRenderer>();
+  const [directionsRenderers, setDirectionsRenderers] = useState<Array<google.maps.DirectionsRenderer>>();
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
   const [routeIndex, setRouteIndex] = useState(0);
   const selected = routes[routeIndex];
@@ -18,22 +19,47 @@ const Directions = ({selectedPlaces}: {selectedPlaces: SelectedPlace[]}) => {
   useEffect(() => {
     if (!routesLibrary || !map) return;
     setDirectionsService(new routesLibrary.DirectionsService());
-    setDirectionsRenderer(new routesLibrary.DirectionsRenderer({map}));
-  }, [routesLibrary, map]);
+    const polylineOptions = [
+      { strokeColor: "#8A2BE2", strokeWeight: 5, strokeOpacity: 0.7 },
+      { strokeColor: "#FF1493", strokeWeight: 5, strokeOpacity: 0.7 },
+      { strokeColor: "#FF4500", strokeWeight: 5, strokeOpacity: 0.7 },
+      { strokeColor: "#40E0D0", strokeWeight: 5, strokeOpacity: 0.7 },
+      { strokeColor: "#00FF00", strokeWeight: 5, strokeOpacity: 0.7 }
+    ]
+    const markerOptions = { icon: '' }
+    let renderers = []
+    for (let i = 0; i < selectedPlaces.length; i++) {
+      renderers.push(new routesLibrary.DirectionsRenderer({ map, polylineOptions: polylineOptions[i], markerOptions }))
+    }
+    setDirectionsRenderers(renderers);
+  }, [routesLibrary, map, selectedPlaces]);
 
   const getDirections = () => {
-    if (!directionsService || !directionsRenderer) return;
+    if (!directionsService || !directionsRenderers) return;
 
+    for (let i = 0; i < selectedPlaces.length - 1; i++) {
+      directionsService
+        .route({
+          origin: selectedPlaces[i].address as string,
+          destination: selectedPlaces[i + 1].address as string,
+          travelMode: google.maps.TravelMode.DRIVING,
+          provideRouteAlternatives: true
+        })
+        .then(response => {
+          directionsRenderers[i].setDirections(response);
+          setRoutes(response.routes);
+        });
+    }
+    // from last location back to beginning
     directionsService
       .route({
-        origin: selectedPlaces[0].address as string,
+        origin: selectedPlaces[selectedPlaces.length - 1].address as string,
         destination: selectedPlaces[0].address as string,
-        waypoints: selectedPlaces.slice(1).map(place => ({location: place.address})),
         travelMode: google.maps.TravelMode.DRIVING,
         provideRouteAlternatives: true
       })
       .then(response => {
-        directionsRenderer.setDirections(response);
+        directionsRenderers[selectedPlaces.length - 1].setDirections(response);
         setRoutes(response.routes);
       });
   }
@@ -46,9 +72,9 @@ const Directions = ({selectedPlaces}: {selectedPlaces: SelectedPlace[]}) => {
 
   if (!leg) {
     return (
-    <div className="directions">
-      <button onClick={getDirections}>Get Directions</button>
-    </div>
+      <div className="directions">
+        <button onClick={getDirections}>Get Directions</button>
+      </div>
     );
   }
 
@@ -56,7 +82,7 @@ const Directions = ({selectedPlaces}: {selectedPlaces: SelectedPlace[]}) => {
     <div className="directions">
       <h2>Directions</h2>
       <ul>
-        {selected.legs.map(leg => 
+        {selected.legs.map(leg =>
           <li className="mt-2" key={leg.start_address}>
             <p>
               {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}

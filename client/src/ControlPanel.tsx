@@ -30,10 +30,10 @@ const ControlPanel = ({data, selectedPlaces, solveMethods, selectedMethod, onSol
         ))}
       </select>
       <p>Data: {data}</p>
-      <p>
+      <span>
         Selected places: 
-        {selectedPlaces.map(place => <p>- {place.name}</p>)}
-      </p>
+        {selectedPlaces.map(place => <p key={place.name}>- {place.name}</p>)}
+      </span>
       <button onClick={onComputePath}>Compute Path</button>
     </div>
   )

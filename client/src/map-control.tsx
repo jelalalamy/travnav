@@ -20,7 +20,7 @@ export const CustomMapControl = ({
 
   return (
     <MapControl position={controlPosition}>
-      <div className="autocomplete-control text-black">
+      <div className="autocomplete-control text-black mt-2">
         {id === 'classic' && (
           <PlaceAutocompleteClassic onPlaceSelect={onPlaceSelect} />
         )}

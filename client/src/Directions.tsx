@@ -2,7 +2,22 @@ import { useState, useEffect } from "react";
 import { useMapsLibrary, useMap } from '@vis.gl/react-google-maps';
 import { SelectedPlace } from "./App";
 
-const Directions = ({ selectedPlaces }: { selectedPlaces: SelectedPlace[] }) => {
+interface Props {
+  selectedPlaces: SelectedPlace[];
+  onComputePath: () => void;
+};
+
+const polylineOptions = [
+  { strokeColor: "#8A2BE2", strokeWeight: 5, strokeOpacity: 0.7 },
+  { strokeColor: "#FF1493", strokeWeight: 5, strokeOpacity: 0.7 },
+  { strokeColor: "#FF4500", strokeWeight: 5, strokeOpacity: 0.7 },
+  { strokeColor: "#40E0D0", strokeWeight: 5, strokeOpacity: 0.7 },
+  { strokeColor: "#00FF00", strokeWeight: 5, strokeOpacity: 0.7 }
+]
+
+const markerOptions = { icon: '' }
+
+const Directions = ({ selectedPlaces, onComputePath }: Props) => {
   const map = useMap();
   const routesLibrary = useMapsLibrary('routes');
   const [directionsService, setDirectionsService] =
@@ -18,23 +33,18 @@ const Directions = ({ selectedPlaces }: { selectedPlaces: SelectedPlace[] }) => 
   // Initialize directions service and renderer
   useEffect(() => {
     if (!routesLibrary || !map) return;
+
     setDirectionsService(new routesLibrary.DirectionsService());
-    const polylineOptions = [
-      { strokeColor: "#8A2BE2", strokeWeight: 5, strokeOpacity: 0.7 },
-      { strokeColor: "#FF1493", strokeWeight: 5, strokeOpacity: 0.7 },
-      { strokeColor: "#FF4500", strokeWeight: 5, strokeOpacity: 0.7 },
-      { strokeColor: "#40E0D0", strokeWeight: 5, strokeOpacity: 0.7 },
-      { strokeColor: "#00FF00", strokeWeight: 5, strokeOpacity: 0.7 }
-    ]
-    const markerOptions = { icon: '' }
+
     let renderers = []
     for (let i = 0; i < selectedPlaces.length; i++) {
       renderers.push(new routesLibrary.DirectionsRenderer({ map, polylineOptions: polylineOptions[i], markerOptions }))
     }
+
     setDirectionsRenderers(renderers);
   }, [routesLibrary, map, selectedPlaces]);
 
-  const getDirections = () => {
+  const getDirections = async () => {
     if (!directionsService || !directionsRenderers) return;
 
     for (let i = 0; i < selectedPlaces.length - 1; i++) {

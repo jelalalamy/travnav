@@ -3,13 +3,14 @@ import { SelectedPlace, SolveMethod } from './App'
 
 interface Props {
   selectedPlaces: Array<SelectedPlace>;
+  bestPath: Array<SelectedPlace>;
   solveMethods: Array<SolveMethod>;
   selectedMethod: SolveMethod;
   onSolveMethodChange: (solveMethod: SolveMethod) => void;
   onComputePath: () => void;
 };
 
-const ControlPanel = ({selectedPlaces, solveMethods, selectedMethod, onSolveMethodChange, onComputePath}: Props) => {
+const ControlPanel = ({selectedPlaces, bestPath, solveMethods, selectedMethod, onSolveMethodChange, onComputePath}: Props) => {
 
   const onMethodSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const newMethod = solveMethods.find(method => method.id === e.target.value);
@@ -32,6 +33,10 @@ const ControlPanel = ({selectedPlaces, solveMethods, selectedMethod, onSolveMeth
         {selectedPlaces.map(place => <p key={place.name}>- {place.name}</p>)}
       </span>
       <button onClick={onComputePath}>Compute Path</button>
+      <span>
+        <p>Best path:</p>
+        {bestPath.map(place => <p key={place.name}>- {place.name}</p>)}
+      </span>
     </div>
   )
 }

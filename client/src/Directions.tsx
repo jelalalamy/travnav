@@ -47,6 +47,8 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
   const getDirections = async () => {
     if (!directionsService || !directionsRenderers) return;
 
+    if (selectedPlaces.length < 2) return;
+
     for (let i = 0; i < selectedPlaces.length - 1; i++) {
       directionsService
         .route({

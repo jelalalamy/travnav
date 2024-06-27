@@ -26,8 +26,9 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
     useState<google.maps.DirectionsRenderer>();
   const [directionsRenderers, setDirectionsRenderers] = useState<Array<google.maps.DirectionsRenderer>>();
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
+  const [legs, setLegs] = useState<google.maps.DirectionsRoute[]>([]);
   const [routeIndex, setRouteIndex] = useState(0);
-  const selected = routes[routeIndex];
+  const selected = routes[0];
   const leg = selected?.legs[0];
 
   // Initialize directions service and renderer
@@ -49,6 +50,7 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
 
     if (selectedPlaces.length < 2) return;
 
+    let newLegs: google.maps.DirectionsRoute[] = []
     for (let i = 0; i < selectedPlaces.length - 1; i++) {
       directionsService
         .route({
@@ -60,6 +62,7 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
         .then(response => {
           directionsRenderers[i].setDirections(response);
           setRoutes(response.routes);
+          newLegs.push(response.routes[0])
         });
     }
     // from last location back to beginning
@@ -73,14 +76,11 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
       .then(response => {
         directionsRenderers[selectedPlaces.length - 1].setDirections(response);
         setRoutes(response.routes);
+        newLegs.push(response.routes[0])
       });
+    
+    setLegs(newLegs)
   }
-
-  // Update direction route
-  useEffect(() => {
-    if (!directionsRenderer) return;
-    directionsRenderer.setRouteIndex(routeIndex);
-  }, [routeIndex, directionsRenderer]);
 
   if (!leg) {
     return (
@@ -94,14 +94,14 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
     <div className="directions">
       <h2>Directions</h2>
       <ul>
-        {selected.legs.map(leg =>
-          <li className="mt-2" key={leg.start_address}>
-            <p>
-              {leg.start_address.split(',')[0]} to {leg.end_address.split(',')[0]}
-            </p>
-            <p>Distance: {leg.distance?.text}</p>
-            <p>Duration: {leg.duration?.text}</p>
-          </li>
+        {legs.map(leg =>
+          <li className="mt-2" key={leg.legs[0].start_address}>
+          <p>
+            {leg.legs[0].start_address.split(',')[0]} to {leg.legs[0].end_address.split(',')[0]}
+          </p>
+          <p>Distance: {leg.legs[0].distance?.text}</p>
+          <p>Duration: {leg.legs[0].duration?.text}</p>
+        </li>
         )}
       </ul>
 

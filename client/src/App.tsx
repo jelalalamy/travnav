@@ -43,6 +43,7 @@ const App = () => {
     const resData = await res.json();
     const path = resData.data.path;
     setData(path + resData.data.distances);
+    console.log(data)
     setBestPath(path.map((place: string) => selectedPlaces.find((selectedPlace: SelectedPlace) => place === selectedPlace.name)));
   };
 
@@ -62,7 +63,6 @@ const App = () => {
           gestureHandling={'greedy'}
           disableDefaultUI={true}>
           <ControlPanel 
-            data={data} 
             selectedPlaces={selectedPlaces} 
             solveMethods={solveMethods}
             selectedMethod={selectedMethod} 

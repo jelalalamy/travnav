@@ -8,11 +8,11 @@ interface Props {
 };
 
 const polylineOptions = [
-  { strokeColor: "#8A2BE2", strokeWeight: 5, strokeOpacity: 0.7 },
-  { strokeColor: "#FF1493", strokeWeight: 5, strokeOpacity: 0.7 },
-  { strokeColor: "#FF4500", strokeWeight: 5, strokeOpacity: 0.7 },
-  { strokeColor: "#40E0D0", strokeWeight: 5, strokeOpacity: 0.7 },
-  { strokeColor: "#00FF00", strokeWeight: 5, strokeOpacity: 0.7 }
+  { strokeColor: "#8A2BE2", strokeWeight: 5, strokeOpacity: 0.65 },
+  { strokeColor: "#FF1493", strokeWeight: 5, strokeOpacity: 0.65 },
+  { strokeColor: "#FF4500", strokeWeight: 5, strokeOpacity: 0.65 },
+  { strokeColor: "#40E0D0", strokeWeight: 5, strokeOpacity: 0.65 },
+  { strokeColor: "#00FF00", strokeWeight: 5, strokeOpacity: 0.65 }
 ]
 
 const markerOptions = { icon: '' }

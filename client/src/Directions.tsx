@@ -22,12 +22,9 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
   const routesLibrary = useMapsLibrary('routes');
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService>();
-  const [directionsRenderer, setDirectionsRenderer] =
-    useState<google.maps.DirectionsRenderer>();
   const [directionsRenderers, setDirectionsRenderers] = useState<Array<google.maps.DirectionsRenderer>>();
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
   const [legs, setLegs] = useState<google.maps.DirectionsRoute[]>([]);
-  const [routeIndex, setRouteIndex] = useState(0);
   const selected = routes[0];
   const leg = selected?.legs[0];
 

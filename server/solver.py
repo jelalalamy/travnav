@@ -72,6 +72,7 @@ def nearest_neighbor_solve(places: List[str], routeMatrix: List[List[int]]) -> L
 def asadpour_solve(places: List[str], routeMatrix: List[List[int]]) -> List[str]:
     numpyArray = np.array(routeMatrix)
     graph = nx.from_numpy_array(numpyArray, create_using=nx.DiGraph)
+    # requires > 2 nodes to work
     tsp = nx.approximation.asadpour_atsp
 
     cycle = tsp(graph) # returns a cycle

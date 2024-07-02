@@ -17,7 +17,8 @@ const autocompleteModes: Array<AutocompleteMode> = [
 
 const solveMethods: Array<SolveMethod> = [
   { id: 'brute', label: 'Brute Force' },
-  { id: 'nearest', label: 'Nearest Neighbour' }
+  { id: 'nearest', label: 'Nearest Neighbour' },
+  { id: 'asadpour', label: 'Asadpour Approximation'}
 ];
 
 const App = () => {

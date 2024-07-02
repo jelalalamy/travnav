@@ -4,4 +4,6 @@ Plan optimal routes between several destinations using real-time data from the G
 
 
 # Screenshots
-![alt text](/docs/screenshot.png)
+![alt text](/docs/screenshot1.png)
+![alt text](/docs/screenshot2.png)
+![alt text](/docs/screenshot3.png)

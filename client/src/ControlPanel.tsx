@@ -21,6 +21,11 @@ const ControlPanel = ({selectedPlaces, bestPath, solveMethods, selectedMethod, o
 
   return (
     <div className="control">
+      <span>
+        <h3>Selected places:</h3>
+        {selectedPlaces.length > 0 ? null : <p>Nothing selected yet!</p>}
+        {selectedPlaces.map(place => <p key={place.name}>- {place.name}</p>)}
+      </span>
       <select className="text-black" value={selectedMethod.id} onChange={onMethodSelect}>
         {solveMethods.map(({id, label}) => (
           <option key={id} value={id}>
@@ -28,15 +33,7 @@ const ControlPanel = ({selectedPlaces, bestPath, solveMethods, selectedMethod, o
           </option>
         ))}
       </select>
-      <span>
-        <p>Selected places:</p>
-        {selectedPlaces.map(place => <p key={place.name}>- {place.name}</p>)}
-      </span>
       <button onClick={onComputePath}>Compute Path</button>
-      <span>
-        <p>Best path:</p>
-        {bestPath.map(place => <p key={place.name}>- {place.name}</p>)}
-      </span>
     </div>
   )
 }

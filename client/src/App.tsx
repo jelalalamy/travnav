@@ -27,7 +27,7 @@ const App = () => {
   const [selectedMethod, setSelectedMethod] = useState<SolveMethod>(solveMethods[0]);
   const [bestPath, setBestPath] = useState<Array<SelectedPlace>>([]);
 
-  const onComputePath = async () => {
+  const computeBestPath = async ():Promise<SelectedPlace[]> => {
     const places = selectedPlaces.map(place => place.name);
     const addresses = selectedPlaces.map(place => place.address)
 
@@ -41,7 +41,12 @@ const App = () => {
     });
     const resData = await res.json();
     const path = resData.data.path;
-    setBestPath(path.map((place: string) => selectedPlaces.find((selectedPlace: SelectedPlace) => place === selectedPlace.name)));
+    return path.map((place: string) => selectedPlaces.find((selectedPlace: SelectedPlace) => place === selectedPlace.name))
+  }
+
+  const onComputePath = async () => {
+    const bestPath = await computeBestPath();
+    setBestPath(bestPath);
   };
 
   const onPlaceSelect = (place: google.maps.places.PlaceResult | null) => {
@@ -69,7 +74,6 @@ const App = () => {
           />
           <Directions
             selectedPlaces={bestPath}
-            onComputePath={onComputePath}
           />
         </Map>
         <CustomMapControl

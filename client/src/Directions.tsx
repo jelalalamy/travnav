@@ -4,7 +4,6 @@ import { SelectedPlace } from "./App";
 
 interface Props {
   selectedPlaces: SelectedPlace[];
-  onComputePath: () => void;
 };
 
 const polylineOptions = [
@@ -17,7 +16,7 @@ const polylineOptions = [
 
 const markerOptions = { icon: '' }
 
-const Directions = ({ selectedPlaces, onComputePath }: Props) => {
+const Directions = ({ selectedPlaces }: Props) => {
   const map = useMap();
   const routesLibrary = useMapsLibrary('routes');
   const [directionsService, setDirectionsService] =
@@ -79,9 +78,21 @@ const Directions = ({ selectedPlaces, onComputePath }: Props) => {
     setLegs(newLegs)
   }
 
+  if (selectedPlaces.length < 2) {
+    return (
+      <div className="directions">
+        <p>Select some places you'd like to visit then click Compute Path!</p>
+      </div>
+    )
+  }
+
   if (!leg) {
     return (
       <div className="directions">
+        <span>
+          <h3>Best path:</h3>
+          {selectedPlaces.map(place => <p key={place.name}>- {place.name}</p>)}
+        </span>
         <button onClick={getDirections}>Get Directions</button>
       </div>
     );

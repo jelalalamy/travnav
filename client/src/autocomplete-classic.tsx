@@ -33,7 +33,7 @@ export const PlaceAutocompleteClassic = ({onPlaceSelect}: Props) => {
 
   return (
     <div className="autocomplete-container w-72">
-      <input className='w-72 text-xl' ref={inputRef} />
+      <input className='w-72 text-xl bg-slate-900/90 rounded-md text-white px-4' ref={inputRef} />
     </div>
   );
 };

@@ -1,3 +1,5 @@
+import networkx as nx
+import numpy as np
 from typing import List
 from itertools import permutations
 
@@ -65,3 +67,20 @@ def nearest_neighbor_solve(places: List[str], routeMatrix: List[List[int]]) -> L
         current = next_place
     distances.append(get_distance(places, routeMatrix, tour[-1], tour[-0]))    
     return tour, distances
+
+
+def asadpour_solve(places: List[str], routeMatrix: List[List[int]]) -> List[str]:
+    numpyArray = np.array(routeMatrix)
+    graph = nx.from_numpy_array(numpyArray, create_using=nx.DiGraph)
+    tsp = nx.approximation.asadpour_atsp
+
+    cycle = tsp(graph) # returns a cycle
+    path = list(map(lambda node: places[node], cycle))[:-1]
+    
+    i = rotate_list_by_element(places[0], path)
+    distances = []
+    for i in range(len(path) - 1):
+        distances.append(routeMatrix[places.index(path[i])][places.index(path[i+1])])
+    distances.append(routeMatrix[places.index(path[-1])][places.index(path[0])])
+
+    return path, distances

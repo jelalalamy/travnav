@@ -1,7 +1,10 @@
+import numpy as np
+import networkx as nx
+import matplotlib.pyplot as plt
 from solver import *
 
 europe = ["Augsburg", "Munich", "Stuttgart", "Nuremberg", "Leipzig", "Dresden", "Berlin", "Hanover", "Bremen", "Hamburg", "Cologne", "Frankfurt"]
-europeSmall = ["Augsburg", "Munich", "Stuttgart", "Nuremberg", "Leipzig", "Dresden", "Berlin"]
+europeSmall = ["Augsburg", "Munich", "Stuttgart", "Nuremberg", "Leipzig", "Dresden"]
 
 europeDistances = [[0,57,133,122,347,362,495,452,543,578,404,250],    # Augsburg
             [57,0,188,144,356,355,498,483,577,605,449,298],     # Munich
@@ -23,13 +26,17 @@ americaDistances = [[0, 15083, 1320, 2836],
                     [3350, 12360, 1603, 0]] 
 
 def main():
-    # print('------ Europe ------')
+    print('------ Europe ------')
     # print(nearest_neighbor_solve(europe, europeDistances))
     # print(brute_force_solve(europeSmall, europeDistances))
     # print(nearest_neighbor_solve(europeSmall, europeDistances))
-    print('----- America ------')
-    print(brute_force_solve(america, americaDistances))
-    print(nearest_neighbor_solve(america, americaDistances))
+    # print('----- America ------')
+    # print(brute_force_solve(america, americaDistances))
+    # print(nearest_neighbor_solve(america, americaDistances))
+    print(brute_force_solve(europeSmall, [r[0:6] for r in europeDistances[0:6]]))
+    print(asadpour_solve(europeSmall, [r[0:6] for r in europeDistances[0:6]]))
+    print(asadpour_solve(america, americaDistances))
+
 
 
 if __name__ == "__main__":

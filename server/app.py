@@ -11,7 +11,7 @@ CORS(app)
 
 @app.get('/hello')
 def hello():
-    return {'data': {'path': ['hello'], 'msg': 'hello'}}
+    return {'data': {'path': ['hellooo'], 'msg': 'hellooo'}}
 
 @app.post('/bestpath')
 def handler():

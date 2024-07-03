@@ -4,3 +4,10 @@ services:
      context: server
     ports: 
       - '5000:5000'
+  client:
+    build:
+      context: client
+    ports:
+      - '3000:3000'
+    depends_on:
+      - server

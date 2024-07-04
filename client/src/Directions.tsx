@@ -80,28 +80,32 @@ const Directions = ({ selectedPlaces }: Props) => {
 
   if (selectedPlaces.length < 2) {
     return (
-      <div className="absolute right-0 top-0 bg-slate-900/90 w-64 m-1 p-5 rounded-md">
-        <p>Select some places you'd like to visit then click "Compute Path"!</p>
+      <div className="absolute right-0 top-0 bg-slate-900/90 w-64 m-1 p-4 rounded-md">
+        <p>Select some places you'd like to visit then click "Compute Path!"</p>
       </div>
     )
   }
 
   if (!leg) {
     return (
-      <div className="absolute right-0 top-0 bg-slate-900/90 w-64 m-1 p-5 rounded-md">
-        <span>
-          <h3>Best path:</h3>
-          {selectedPlaces.map(place => <p key={place.name}>- {place.name}</p>)}
-        </span>
-        <button onClick={getDirections}>Get Directions</button>
+      <div className="absolute right-0 top-0">
+        <div className="bg-slate-900/90 w-64 m-1 p-4 rounded-md">
+          <span>
+            <h3>Best path:</h3>
+            {selectedPlaces.map(place => <p key={place.name}>- {place.name}</p>)}
+          </span>
+        </div>
+        <div onClick={getDirections} className="bg-slate-900/90 rounded-md flex justify-center hover:cursor-pointer hover:bg-slate-900 p-2 mx-auto w-2/3">
+          <span>Get Directions</span>
+        </div>
       </div>
     );
   }
 
   return (
     <div id="directions-wrapper" className="absolute right-0 top-0">
-      {legs.map((leg, i) => 
-        <div key={leg.legs[0].start_address} className="w-64 m-1 p-5 rounded-md" style={{ backgroundColor: polylineOptions[i].strokeColor, opacity: 0.85 }}>
+      {legs.map((leg, i) =>
+        <div key={leg.legs[0].start_address} className="w-64 m-1 p-4 rounded-md" style={{ backgroundColor: polylineOptions[i].strokeColor, opacity: 0.85 }}>
           <p>
             {leg.legs[0].start_address.split(',')[0]} to {leg.legs[0].end_address.split(',')[0]}
           </p>
@@ -111,23 +115,6 @@ const Directions = ({ selectedPlaces }: Props) => {
       )}
     </div>
   )
-
-  return (
-    <div className="directions">
-      <h2>Directions</h2>
-      <ul>
-        {legs.map(leg =>
-          <li className="mt-2" key={leg.legs[0].start_address}>
-            <p>
-              {leg.legs[0].start_address.split(',')[0]} to {leg.legs[0].end_address.split(',')[0]}
-            </p>
-            <p>Distance: {leg.legs[0].distance?.text}</p>
-            <p>Duration: {leg.legs[0].duration?.text}</p>
-          </li>
-        )}
-      </ul>
-    </div>
-  );
 }
 
 export default Directions
